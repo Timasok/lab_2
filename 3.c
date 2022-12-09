@@ -1,9 +1,10 @@
 #include <math.h>
-#include "kirpich.h"
+#include "radio.h"
 
 double precision_analysis( double *radioactivity, double *time, int N )
 {
-	int i = 0, M = 10, d_exp = 0, d_linear = 0;
+	int i = 0, M = 10;
+	double d_exp = 0, d_linear = 0;
 
 	while (M <= N)
 	{
@@ -12,17 +13,23 @@ double precision_analysis( double *radioactivity, double *time, int N )
 			decay_rate += (time[i] / (1 - radioactivity[i])) / M;						
 			decay_time += -1 * (time[i] / log(radioactivity[i])) / M; 					
 		}*/
+		double decay_time = nonlinear_equation(radioactivity, time, M, PRECISION);
+		double decay_rate = linear_equation(radioactivity, time, M);
 
-		d_exp = dev_exp(radioactivity, time, M, nonlinear_equation(radioactivity, time, M, 0.0001));							
-		d_linear = dev_linear(radioactivity, time, M, linear_equation(radioactivity, time, M)); 					
+		printf("decay_time = %lf decay_rate = %lf M = %d ", decay_time, decay_rate, M);
 
-		if (d_exp > 2 * d_lin)														
+		d_exp = dev_exp(radioactivity, time, M, decay_time);							
+		d_linear = dev_linear(radioactivity, time, M, decay_rate); 					
+
+		printf("d_exp = %lf d_linear = %lf \n", d_exp, d_linear);
+
+		if (d_linear > 2 * d_exp)														
 			break;
 
 		M++;
 	}
 
-	return time[0] - time[M - 1];														
+	return fabs(time[0] - time[M - 1]);														
 }
 
 double dev_exp( double *radioactivity, double *time, int M, double decay_time )

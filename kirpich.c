@@ -9,22 +9,22 @@ double precision_analysis( double *radioactivity, double *time, int N )
 	{
 		double decay_rate = 0, decay_time = 0;
 
-		for (i = 0; i < M; i++)															// найти decay_rate и decay_time
+		for (i = 0; i < M; i++)															
 		{
-			decay_rate += (time[i] / (1 - radioactivity[i])) / M;						// посчитал среднее арифметическое decay_rate
-			decay_time += -1 * (time[i] / log(radioactivity[i])) / M; 					// посчитал среднее арифметическое decay_time
+			decay_rate += (time[i] / (1 - radioactivity[i])) / M;						
+			decay_time += -1 * (time[i] / log(radioactivity[i])) / M; 					
 		}
 
-		dev_exp = dev_exp(radioactivity, time, M, decay_time);							// посчитал среднеквадратичное отклонение экспоненциальной интерполяции на М точках
-		dev_linear = dev_linear(radioactivity, time, M, decay_rate); 					// посчитал среднеквадратичное отклонение линейной интерполяции на М точках
+		dev_exp = dev_exp(radioactivity, time, M, decay_time);							
+		dev_linear = dev_linear(radioactivity, time, M, decay_rate); 					
 
-		if (dev_exp > 2 * dev_lin)
+		if (dev_exp > 2 * dev_lin)														
 			break;
 
 		M++;
 	}
 
-	return time[0] - time[M - 1];
+	return time[0] - time[M - 1];														
 }
 
 double dev_exp( double *radioactivity, double *time, int M, double decay_time )

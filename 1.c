@@ -21,7 +21,7 @@ void add_noise(double* radioactivity, int N)
     for (int i = 0; i < N; ++i)
     {
         int r = (rand() % 2000000 - 1000000) / 1000000;
-        radioactivity[i] += r;
+        radioactivity[i] += r * 0.05;
     }
     
 }

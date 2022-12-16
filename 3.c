@@ -8,26 +8,19 @@ double precision_analysis( double *radioactivity, double *time, int N )
 
 	while (M <= N)
 	{
-		/*for (i = 0; i < M; i++)															
-		{   
-			decay_rate += (time[i] / (1 - radioactivity[i])) / M;						
-			decay_time += -1 * (time[i] / log(radioactivity[i])) / M; 					
-		}*/
 		double decay_time = nonlinear_equation(radioactivity, time, M, PRECISION);
 		double decay_rate = linear_equation(radioactivity, time, M);
-
-		printf("decay_time = %lf decay_rate = %lf M = %d ", decay_time, decay_rate, M);
 
 		d_exp = dev_exp(radioactivity, time, M, decay_time);							
 		d_linear = dev_linear(radioactivity, time, M, decay_rate); 					
 
-		printf("d_exp = %lf d_linear = %lf \n", d_exp, d_linear);
-
 		if (d_linear > 2 * d_exp)														
 			break;
-
+		
 		M++;
 	}
+	
+	printf("%lf %lf", time[0], time[M - 1])
 
 	return fabs(time[0] - time[M - 1]);														
 }
